@@ -8,7 +8,11 @@
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "test": "jest",
-    "test1": "echo \"Error: no test specified\" && exit 1"
+    "test1": "echo \"Error: no test specified\" && exit 1",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "migration:gen": "npm run typeorm migration:generate src/database/migrations/InitialMigration -- -d src/database/data-source.ts",
+    "migration:run": "npm run typeorm migration:run -- -d src/database/data-source.ts",
+    "migration:rollback": "npm run typeorm migration:revert -- -d src/database/data-source.ts"
   },
   "repository": {
     "type": "git",
