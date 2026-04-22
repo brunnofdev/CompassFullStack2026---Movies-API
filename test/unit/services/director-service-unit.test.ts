@@ -152,6 +152,44 @@ describe("DirectorService", () => {
 
       expect(directorRepositoryMock.update).toHaveBeenCalledWith(1, "New Name");
     });
+
+    describe("findByIdWithMovies()", () => {
+      test("Should throw HttpError 404 when director is not found", async () => {
+        directorRepositoryMock.findByIdWithMovies.mockResolvedValue(null);
+
+        try {
+          await directorService.findByIdWithMovies(999);
+          throw new Error("Should have thrown an exception");
+        } catch (error: any) {
+          expect(error).toBeInstanceOf(HttpError);
+          expect(error.statusCode).toBe(404);
+        }
+      });
+
+      test("Should successfully return the director with their movies", async () => {
+        // Simulamos o retorno do banco com a relação de filmes preenchida
+        const mockDirectorWithMovies = {
+          id: 1,
+          name: "Quentin Tarantino",
+          movies: [
+            { id: 10, title: "Pulp Fiction" },
+            { id: 11, title: "Kill Bill" },
+          ],
+        };
+
+        directorRepositoryMock.findByIdWithMovies.mockResolvedValue(
+          mockDirectorWithMovies,
+        );
+
+        const result = await directorService.findByIdWithMovies(1);
+
+        expect(result).toEqual(mockDirectorWithMovies);
+        expect(result).toHaveProperty("movies");
+        expect(directorRepositoryMock.findByIdWithMovies).toHaveBeenCalledWith(
+          1,
+        );
+      });
+    });
   });
 
   //Delete tests
