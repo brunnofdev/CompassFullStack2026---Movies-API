@@ -8,7 +8,12 @@ const app = express();
 app.use(express.json());
 
 app.use((req, res, next) => {
-  console.info(`[${req.method}] ${req.url}`);
+  console.info(
+    `\n[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`,
+  );
+  if (req.body && Object.keys(req.body).length > 0) {
+    console.info(`Body: ${JSON.stringify(req.body)}`);
+  }
   next();
 });
 
