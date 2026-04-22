@@ -9,7 +9,7 @@ export const AppDataSource = new DataSource({
   password: "adminpassword",
   database: "movie_db",
   synchronize: false,
-  logging: true,
+  logging: false,
   entities: ["src/models/*.ts"],
   migrations: ["src/database/migrations/*.ts"],
   subscribers: [],

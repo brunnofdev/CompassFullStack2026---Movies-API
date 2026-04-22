@@ -1,6 +1,7 @@
 import express from "express";
 import { AppDataSource } from "./database/data-source";
 import { errorMiddleware } from "./middlewares/error-middleware";
+import directorRouter from "./Routes/director-routes";
 
 const app = express();
 
@@ -11,7 +12,7 @@ app.use((req, res, next) => {
   next();
 });
 
-//Routes here
+app.use("/directors", directorRouter);
 
 app.use(errorMiddleware);
 
