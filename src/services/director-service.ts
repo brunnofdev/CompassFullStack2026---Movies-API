@@ -29,4 +29,44 @@ export class DirectorService {
     }
     return director;
   }
+
+  async findByIdWithMovies(id: number): Promise<Director> {
+    const director = await this.directorRepository.findByIdWithMovies(id);
+    if (!director) {
+      throw new HttpError("Director not found", 404);
+    }
+    return director;
+  }
+
+  async update(id: number, name: string): Promise<void> {
+    if (!name || name.trim().length < 3 || name.trim().length > 50) {
+      throw new HttpError("Name must be between 3 and 50 characters", 400);
+    }
+
+    const director = await this.directorRepository.findById(id);
+    if (!director) {
+      throw new HttpError("Director not found", 404);
+    }
+
+    const existingName = await this.directorRepository.findByName(name);
+    if (existingName && existingName.id !== id) {
+      throw new HttpError("Director already exists with this name", 409);
+    }
+
+    await this.directorRepository.update(id, name);
+  }
+
+  async delete(id: number): Promise<void> {
+    const director = await this.directorRepository.findByIdWithMovies(id);
+
+    if (!director) {
+      throw new HttpError("Director not found", 404);
+    }
+
+    if (director.movies && director.movies.length > 0) {
+      throw new HttpError("Cannot delete a director with linked movies", 409);
+    }
+
+    await this.directorRepository.delete(id);
+  }
 }

@@ -14,7 +14,6 @@ describe("DirectorService", () => {
   let directorRepositoryMock: any;
 
   beforeAll(() => {
-    // Mock completo do repositório
     directorRepositoryMock = {
       findByName: jest.fn(),
       findById: jest.fn(),
@@ -32,7 +31,7 @@ describe("DirectorService", () => {
     jest.clearAllMocks();
   });
 
-  //Create Test
+  //Create Tests
 
   describe("create()", () => {
     test("Should throw HttpError 400 if name is invalid", async () => {
@@ -74,7 +73,8 @@ describe("DirectorService", () => {
       });
     });
   });
-  //Find Test
+
+  //Find Tests
 
   describe("findAll()", () => {
     test("Should return a list of directors", async () => {
@@ -113,6 +113,91 @@ describe("DirectorService", () => {
 
       expect(result).toEqual(mockDirector);
       expect(directorRepositoryMock.findById).toHaveBeenCalledWith(1);
+    });
+  });
+
+  //Update tests
+
+  describe("update()", () => {
+    test("Should throw HttpError 400 when new name is invalid", async () => {
+      try {
+        await directorService.update(1, ""); // Empty name
+        throw new Error("Should have thrown an exception");
+      } catch (error: any) {
+        expect(error).toBeInstanceOf(HttpError);
+        expect(error.statusCode).toBe(400);
+      }
+    });
+
+    test("Should throw HttpError 404 when trying to update a non-existent director", async () => {
+      directorRepositoryMock.findById.mockResolvedValue(null);
+
+      try {
+        await directorService.update(999, "James Cameron");
+        throw new Error("Should have thrown an exception");
+      } catch (error: any) {
+        expect(error).toBeInstanceOf(HttpError);
+        expect(error.statusCode).toBe(404);
+      }
+    });
+
+    test("Should successfully update the director's name", async () => {
+      directorRepositoryMock.findById.mockResolvedValue({
+        id: 1,
+        name: "Old Name",
+      });
+      directorRepositoryMock.findByName.mockResolvedValue(null);
+
+      await directorService.update(1, "New Name");
+
+      expect(directorRepositoryMock.update).toHaveBeenCalledWith(1, "New Name");
+    });
+  });
+
+  //Delete tests
+
+  describe("delete()", () => {
+    test("Should throw HttpError 404 when trying to delete a non-existent director", async () => {
+      directorRepositoryMock.findByIdWithMovies.mockResolvedValue(null);
+
+      try {
+        await directorService.delete(999);
+        throw new Error("Should have thrown an exception");
+      } catch (error: any) {
+        expect(error).toBeInstanceOf(HttpError);
+        expect(error.statusCode).toBe(404);
+      }
+    });
+
+    test("Should throw HttpError 409 when director has linked movies", async () => {
+      directorRepositoryMock.findByIdWithMovies.mockResolvedValue({
+        id: 1,
+        name: "Nolan",
+        movies: [{ id: 10, title: "Inception" }],
+      });
+
+      try {
+        await directorService.delete(1);
+        throw new Error("Should have thrown an exception");
+      } catch (error: any) {
+        expect(error).toBeInstanceOf(HttpError);
+        expect(error.statusCode).toBe(409);
+        expect(error.message).toBe(
+          "Cannot delete a director with linked movies",
+        );
+      }
+    });
+
+    test("Should successfully delete the director when there are no linked movies", async () => {
+      directorRepositoryMock.findByIdWithMovies.mockResolvedValue({
+        id: 1,
+        name: "Nolan",
+        movies: [],
+      });
+
+      await directorService.delete(1);
+
+      expect(directorRepositoryMock.delete).toHaveBeenCalledWith(1);
     });
   });
 });
