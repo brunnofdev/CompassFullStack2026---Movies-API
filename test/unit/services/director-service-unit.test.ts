@@ -34,16 +34,6 @@ describe("DirectorService", () => {
   //Create Tests
 
   describe("create()", () => {
-    test("Should throw HttpError 400 if name is invalid", async () => {
-      try {
-        await directorService.create("Ab");
-        throw new Error("Should throw a exception");
-      } catch (error: any) {
-        expect(error).toBeInstanceOf(HttpError);
-        expect(error.statusCode).toBe(400);
-      }
-    });
-
     test("Should throw HttpError 409 if director already exists", async () => {
       directorRepositoryMock.findByName.mockResolvedValue({
         id: 1,
@@ -119,16 +109,6 @@ describe("DirectorService", () => {
   //Update tests
 
   describe("update()", () => {
-    test("Should throw HttpError 400 when new name is invalid", async () => {
-      try {
-        await directorService.update(1, ""); // Empty name
-        throw new Error("Should have thrown an exception");
-      } catch (error: any) {
-        expect(error).toBeInstanceOf(HttpError);
-        expect(error.statusCode).toBe(400);
-      }
-    });
-
     test("Should throw HttpError 404 when trying to update a non-existent director", async () => {
       directorRepositoryMock.findById.mockResolvedValue(null);
 

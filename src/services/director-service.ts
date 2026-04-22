@@ -6,10 +6,6 @@ export class DirectorService {
   constructor(private readonly directorRepository: DirectorRepository) {}
 
   async create(name: string): Promise<Director> {
-    if (!name || name.trim().length < 3 || name.trim().length > 50) {
-      throw new HttpError("Name must be between 3 and 50 characters", 400);
-    }
-
     const existingDirector = await this.directorRepository.findByName(name);
     if (existingDirector) {
       throw new HttpError("Director already exists with this name", 409);
@@ -39,10 +35,6 @@ export class DirectorService {
   }
 
   async update(id: number, name: string): Promise<void> {
-    if (!name || name.trim().length < 3 || name.trim().length > 50) {
-      throw new HttpError("Name must be between 3 and 50 characters", 400);
-    }
-
     const director = await this.directorRepository.findById(id);
     if (!director) {
       throw new HttpError("Director not found", 404);
