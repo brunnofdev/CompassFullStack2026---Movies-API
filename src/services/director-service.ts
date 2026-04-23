@@ -1,51 +1,50 @@
 import { DirectorRepository } from "../repositories/director-repository";
 import { HttpError } from "../errors/http-error";
 import { Director } from "../models/Director";
+import {
+  IDirector,
+  IDirectorWithMovies,
+  ICreateDirectorDTO,
+} from "../interfaces/director-interface";
 
 export class DirectorService {
   constructor(private readonly directorRepository: DirectorRepository) {}
 
-  async create(name: string): Promise<Director> {
-    const existingDirector = await this.directorRepository.findByName(name);
+  async create(data: ICreateDirectorDTO): Promise<IDirector> {
+    const existingDirector = await this.directorRepository.findByName(
+      data.name,
+    );
     if (existingDirector) {
       throw new HttpError("Director already exists with this name", 409);
     }
 
-    return await this.directorRepository.create({ name });
+    return await this.directorRepository.create({ name: data.name });
   }
 
-  async findAll(): Promise<Director[]> {
+  async findAll(): Promise<IDirector[]> {
     return await this.directorRepository.findAll();
   }
 
-  async findById(id: number): Promise<Director> {
-    const director = await this.directorRepository.findById(id);
-    if (!director) {
-      throw new HttpError("Director not found", 404);
-    }
-    return director;
-  }
-
-  async findByIdWithMovies(id: number): Promise<Director> {
+  async findById(id: number): Promise<IDirectorWithMovies> {
     const director = await this.directorRepository.findByIdWithMovies(id);
     if (!director) {
       throw new HttpError("Director not found", 404);
     }
-    return director;
+    return director as IDirectorWithMovies;
   }
 
-  async update(id: number, name: string): Promise<void> {
+  async update(id: number, data: ICreateDirectorDTO): Promise<void> {
     const director = await this.directorRepository.findById(id);
     if (!director) {
       throw new HttpError("Director not found", 404);
     }
 
-    const existingName = await this.directorRepository.findByName(name);
+    const existingName = await this.directorRepository.findByName(data.name);
     if (existingName && existingName.id !== id) {
       throw new HttpError("Director already exists with this name", 409);
     }
 
-    await this.directorRepository.update(id, name);
+    await this.directorRepository.update(id, data.name);
   }
 
   async delete(id: number): Promise<void> {

@@ -1,12 +1,18 @@
 import { Request, Response, NextFunction } from "express";
 import { DirectorService } from "../services/director-service";
+import {
+  IDirector,
+  IDirectorWithMovies,
+  ICreateDirectorDTO,
+} from "../interfaces/director-interface";
 
 export class DirectorController {
   constructor(private readonly directorService: DirectorService) {}
 
   create = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const director = await this.directorService.create(req.body.name);
+      const data = req.body as ICreateDirectorDTO;
+      const director = await this.directorService.create(data);
       return res.status(201).json(director);
     } catch (error) {
       next(error);
@@ -39,9 +45,7 @@ export class DirectorController {
   ) => {
     try {
       const { id } = req.params;
-      const director = await this.directorService.findByIdWithMovies(
-        Number(id),
-      );
+      const director = await this.directorService.findById(Number(id));
       return res.status(200).json(director.movies || []);
     } catch (error) {
       next(error);
@@ -51,7 +55,8 @@ export class DirectorController {
   update = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
-      await this.directorService.update(Number(id), req.body.name);
+      const data = req.body as ICreateDirectorDTO;
+      await this.directorService.update(Number(id), data);
       return res.status(200).json({ message: "Director updated successfully" });
     } catch (error) {
       next(error);
