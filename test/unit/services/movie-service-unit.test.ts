@@ -31,7 +31,7 @@ describe("MovieService", () => {
     );
   });
 
-  describe("create", () => {
+  describe("create()", () => {
     const validMovieDTO: ICreateMovieDTO = {
       title: "Interstellar",
       releaseYear: 2014,
@@ -101,7 +101,128 @@ describe("MovieService", () => {
     });
   });
 
-  describe("delete", () => {
+  describe("findAll()", () => {
+    test("Should return a list of movies based on filters", async () => {
+      const mockMovies = [
+        {
+          id: 1,
+          title: "Inception",
+          releaseYear: 2010,
+          genre: "Sci-Fi",
+          directorId: 1,
+        },
+      ] as unknown as Movie[];
+
+      mockMovieRepository.findAll.mockResolvedValue(mockMovies);
+
+      const filters = { genre: "Sci-Fi" };
+      const result = await movieService.findAll(filters);
+
+      expect(result).toEqual(mockMovies);
+      expect(mockMovieRepository.findAll).toHaveBeenCalledWith(filters);
+    });
+  });
+
+  describe("findById()", () => {
+    test("Should throw HttpError 404 when movie is not found", async () => {
+      mockMovieRepository.findById.mockResolvedValue(null);
+
+      try {
+        await movieService.findById(999);
+        throw new Error("Should have thrown an exception");
+      } catch (error: unknown) {
+        expect(error).toBeInstanceOf(HttpError);
+        const httpError = error as HttpError;
+        expect(httpError.statusCode).toBe(404);
+      }
+    });
+
+    test("Should successfully return the movie", async () => {
+      const mockMovie = { id: 1, title: "Inception" } as unknown as Movie;
+      mockMovieRepository.findById.mockResolvedValue(mockMovie);
+
+      const result = await movieService.findById(1);
+
+      expect(result).toEqual(mockMovie);
+      expect(mockMovieRepository.findById).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe("update()", () => {
+    const updateDTO: ICreateMovieDTO = {
+      title: "Dunkirk",
+      releaseYear: 2017,
+      genre: "War",
+      directorId: 1,
+    };
+
+    test("Should throw HttpError 404 if movie to update is not found", async () => {
+      mockMovieRepository.findById.mockResolvedValue(null);
+
+      try {
+        await movieService.update(999, updateDTO);
+        throw new Error("Should have thrown an exception");
+      } catch (error: unknown) {
+        expect(error).toBeInstanceOf(HttpError);
+        const httpError = error as HttpError;
+        expect(httpError.statusCode).toBe(404);
+      }
+    });
+
+    test("Should throw HttpError 404 if new director is not found", async () => {
+      mockMovieRepository.findById.mockResolvedValue({
+        id: 1,
+      } as unknown as Movie);
+      mockDirectorRepository.findById.mockResolvedValue(null);
+
+      try {
+        await movieService.update(1, updateDTO);
+        throw new Error("Should have thrown an exception");
+      } catch (error: unknown) {
+        expect(error).toBeInstanceOf(HttpError);
+        const httpError = error as HttpError;
+        expect(httpError.statusCode).toBe(404);
+      }
+    });
+
+    test("Should throw HttpError 409 if updating creates an exact duplicate of another movie", async () => {
+      mockMovieRepository.findById.mockResolvedValue({
+        id: 1,
+      } as unknown as Movie);
+      mockDirectorRepository.findById.mockResolvedValue({
+        id: 1,
+      } as unknown as Director);
+      mockMovieRepository.findExactMatch.mockResolvedValue({
+        id: 2,
+        ...updateDTO,
+      } as unknown as Movie);
+
+      try {
+        await movieService.update(1, updateDTO);
+        throw new Error("Should have thrown an exception");
+      } catch (error: unknown) {
+        expect(error).toBeInstanceOf(HttpError);
+        const httpError = error as HttpError;
+        expect(httpError.statusCode).toBe(409);
+      }
+    });
+
+    test("Should successfully update the movie", async () => {
+      mockMovieRepository.findById.mockResolvedValue({
+        id: 1,
+      } as unknown as Movie);
+      mockDirectorRepository.findById.mockResolvedValue({
+        id: 1,
+      } as unknown as Director);
+      mockMovieRepository.findExactMatch.mockResolvedValue(null);
+
+      await movieService.update(1, updateDTO);
+
+      expect(mockMovieRepository.update).toHaveBeenCalledWith(1, updateDTO);
+    });
+  });
+
+  describe("delete()", () => {
     test("Should throw HttpError 404 if movie to delete is not found", async () => {
       mockMovieRepository.findById.mockResolvedValue(null);
 
