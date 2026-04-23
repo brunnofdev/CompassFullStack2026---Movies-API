@@ -17,7 +17,6 @@ export class MovieController {
 
   findAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // Extraindo os Query Params da URL (Requisito 4)
       const filters: IMovieFilters = {};
       if (req.query.title) {
         filters.title = req.query.title as string;
@@ -64,7 +63,7 @@ export class MovieController {
       const { id } = req.params;
       await this.movieService.delete(Number(id));
 
-      return res.status(204).send(); // 204 é o código HTTP padrão para deleção com sucesso sem corpo de resposta
+      return res.status(200).json({ message: "Movie deleted successfully" });
     } catch (error) {
       next(error);
     }

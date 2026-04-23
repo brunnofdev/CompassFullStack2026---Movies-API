@@ -60,7 +60,6 @@ export function validateMovie(req: Request, res: Response, next: NextFunction) {
     );
   }
 
-  // 4. Validação da Descrição (Opcional, mas com limite de 255 chars)
   if (description !== undefined) {
     if (typeof description !== "string") {
       return next(new HttpError("Description must be a string", 400));
