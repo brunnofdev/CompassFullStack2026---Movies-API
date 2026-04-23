@@ -45,7 +45,9 @@ export class DirectorController {
   ) => {
     try {
       const { id } = req.params;
-      const director = await this.directorService.findById(Number(id));
+      const director = await this.directorService.findMoviesByDirector(
+        Number(id),
+      );
       return res.status(200).json(director.movies || []);
     } catch (error) {
       next(error);

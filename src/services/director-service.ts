@@ -25,7 +25,15 @@ export class DirectorService {
     return await this.directorRepository.findAll();
   }
 
-  async findById(id: number): Promise<IDirectorWithMovies> {
+  async findById(id: number): Promise<IDirector> {
+    const director = await this.directorRepository.findById(id);
+    if (!director) {
+      throw new HttpError("Director not found", 404);
+    }
+    return director as IDirector;
+  }
+
+  async findMoviesByDirector(id: number): Promise<IDirectorWithMovies> {
     const director = await this.directorRepository.findByIdWithMovies(id);
     if (!director) {
       throw new HttpError("Director not found", 404);
