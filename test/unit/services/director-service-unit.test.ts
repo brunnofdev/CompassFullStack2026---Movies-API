@@ -9,39 +9,24 @@ import {
   beforeAll,
   beforeEach,
 } from "@jest/globals";
+import { DirectorRepository } from "../../../src/repositories/director-repository";
 
 describe("DirectorService", () => {
   let directorService: DirectorService;
 
-  // 1. Tipagem estrita: Fim do 'any' no mock!
-  let directorRepositoryMock: {
-    findByName: jest.Mock<(name: string) => Promise<Partial<Director> | null>>;
-    findById: jest.Mock<(id: number) => Promise<Partial<Director> | null>>;
-    findByIdWithMovies: jest.Mock<
-      (id: number) => Promise<Partial<Director> | null>
-    >;
-    create: jest.Mock<(data: { name: string }) => Promise<Partial<Director>>>;
-    findAll: jest.Mock<() => Promise<Partial<Director>[]>>;
-    update: jest.Mock<(id: number, name: string) => Promise<void>>;
-    delete: jest.Mock<(id: number) => Promise<void>>;
-  };
-
-  beforeAll(() => {
-    directorRepositoryMock = {
-      findByName: jest.fn(),
-      findById: jest.fn(),
-      findByIdWithMovies: jest.fn(),
-      create: jest.fn(),
-      findAll: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-    };
-
-    directorService = new DirectorService(directorRepositoryMock as any);
-  });
+  const directorRepositoryMock = {
+    findByName: jest.fn(),
+    findById: jest.fn(),
+    findByIdWithMovies: jest.fn(),
+    create: jest.fn(),
+    findAll: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+  } as unknown as jest.Mocked<DirectorRepository>;
 
   beforeEach(() => {
     jest.clearAllMocks();
+    directorService = new DirectorService(directorRepositoryMock);
   });
 
   // Create Tests
@@ -50,13 +35,12 @@ describe("DirectorService", () => {
       directorRepositoryMock.findByName.mockResolvedValue({
         id: 1,
         name: "Tarantino",
-      });
+      } as unknown as Director);
 
       try {
-        await directorService.create({ name: "Tarantino" }); // 2. Usando DTO
+        await directorService.create({ name: "Tarantino" });
         throw new Error("Should throw a exception");
       } catch (error: unknown) {
-        // 3. unknown em vez de any
         expect(error).toBeInstanceOf(HttpError);
         const httpError = error as HttpError;
         expect(httpError.statusCode).toBe(409);
@@ -68,9 +52,9 @@ describe("DirectorService", () => {
       directorRepositoryMock.create.mockResolvedValue({
         id: 1,
         name: "Spielberg",
-      });
+      } as unknown as Director);
 
-      const result = await directorService.create({ name: "Spielberg" }); // DTO
+      const result = await directorService.create({ name: "Spielberg" });
       expect(result).toHaveProperty("id", 1);
       expect(directorRepositoryMock.create).toHaveBeenCalledWith({
         name: "Spielberg",
@@ -82,8 +66,8 @@ describe("DirectorService", () => {
   describe("findAll()", () => {
     test("Should return a list of directors", async () => {
       const mockList = [
-        { id: 1, name: "Steven Spielberg" },
-        { id: 2, name: "Christopher Nolan" },
+        { id: 1, name: "Steven Spielberg" } as unknown as Director,
+        { id: 2, name: "Christopher Nolan" } as unknown as Director,
       ];
 
       directorRepositoryMock.findAll.mockResolvedValue(mockList);
@@ -97,8 +81,7 @@ describe("DirectorService", () => {
 
   describe("findById()", () => {
     test("Should throw HttpError 404 when director is not found", async () => {
-      // O service agora usa o findByIdWithMovies internamente
-      directorRepositoryMock.findByIdWithMovies.mockResolvedValue(null);
+      directorRepositoryMock.findById.mockResolvedValue(null);
 
       try {
         await directorService.findById(999);
@@ -110,8 +93,21 @@ describe("DirectorService", () => {
       }
     });
 
+    test("Should successfully return the director", async () => {
+      const mockDirector = {
+        id: 1,
+        name: "Quentin Tarantino",
+      } as unknown as Director;
+
+      directorRepositoryMock.findById.mockResolvedValue(mockDirector);
+
+      const result = await directorService.findById(1);
+
+      expect(result).toEqual(mockDirector);
+      expect(directorRepositoryMock.findById).toHaveBeenCalledWith(1);
+    });
+
     test("Should successfully return the director with movies", async () => {
-      // 4. Mock atualizado com a lista de filmes para bater com a interface
       const mockDirector = {
         id: 1,
         name: "Quentin Tarantino",
@@ -128,7 +124,7 @@ describe("DirectorService", () => {
 
       directorRepositoryMock.findByIdWithMovies.mockResolvedValue(mockDirector);
 
-      const result = await directorService.findById(1);
+      const result = await directorService.findMoviesByDirector(1);
 
       expect(result).toEqual(mockDirector);
       expect(directorRepositoryMock.findByIdWithMovies).toHaveBeenCalledWith(1);
@@ -141,7 +137,7 @@ describe("DirectorService", () => {
       directorRepositoryMock.findById.mockResolvedValue(null);
 
       try {
-        await directorService.update(999, { name: "James Cameron" }); // DTO
+        await directorService.update(999, { name: "James Cameron" });
         throw new Error("Should have thrown an exception");
       } catch (error: unknown) {
         expect(error).toBeInstanceOf(HttpError);
@@ -154,10 +150,10 @@ describe("DirectorService", () => {
       directorRepositoryMock.findById.mockResolvedValue({
         id: 1,
         name: "Old Name",
-      });
+      } as unknown as Director);
       directorRepositoryMock.findByName.mockResolvedValue(null);
 
-      await directorService.update(1, { name: "New Name" }); // DTO
+      await directorService.update(1, { name: "New Name" });
 
       expect(directorRepositoryMock.update).toHaveBeenCalledWith(1, "New Name");
     });
@@ -191,7 +187,7 @@ describe("DirectorService", () => {
             directorId: 1,
             description: "",
           },
-        ], // 5. Filme completo
+        ],
       } as unknown as Director);
 
       try {
