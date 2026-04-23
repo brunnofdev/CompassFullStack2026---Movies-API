@@ -8,8 +8,8 @@ import { Request, Response, NextFunction } from "express";
 
 describe("Validation Middleware - validateDirector()", () => {
   test("Should call next with HttpError 400 if name is too short", () => {
-    const req = { body: { name: "Ab" } } as any;
-    const res = {} as any;
+    const req = { body: { name: "Ab" } } as unknown as Request;
+    const res = {} as unknown as Response;
     const next = jest.fn();
 
     validateDirector(req, res, next);
