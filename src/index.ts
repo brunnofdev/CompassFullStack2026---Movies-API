@@ -2,6 +2,7 @@ import express from "express";
 import { AppDataSource } from "./database/data-source";
 import { errorMiddleware } from "./middlewares/error-middleware";
 import directorRouter from "./Routes/director-routes";
+import { movieRouter } from "./Routes/movie-routes";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/directors", directorRouter);
+app.use("/movies", movieRouter);
 
 app.use(errorMiddleware);
 
