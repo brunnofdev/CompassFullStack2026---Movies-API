@@ -132,7 +132,7 @@ Este projeto é uma API RESTful desenvolvida para o Desafio Técnico da Sprint 2
 
 - **Ambiente Dockerizado**: Aplicação e banco de dados totalmente conteinerizados utilizando Docker Compose.
 
-## 🛠️ Technologies
+## 🛠️ Tecnologias
 
 - **Ambiente**: Node.js
 - **Linguagem**: TypeScript
