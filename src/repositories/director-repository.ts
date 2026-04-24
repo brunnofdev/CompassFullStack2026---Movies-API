@@ -21,6 +21,11 @@ export class DirectorRepository {
     return await this.repository.findOne({
       where: { id },
       relations: ["movies"],
+      order: {
+        movies: {
+          id: "ASC",
+        },
+      },
     });
   }
 
@@ -30,7 +35,11 @@ export class DirectorRepository {
   }
 
   async findAll(): Promise<Director[]> {
-    return await this.repository.find();
+    return await this.repository.find({
+      order: {
+        id: "ASC",
+      },
+    });
   }
 
   async update(id: number, name: string): Promise<void> {

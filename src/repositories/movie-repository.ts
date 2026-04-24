@@ -33,6 +33,9 @@ export class MovieRepository {
     return await this.repository.find({
       where,
       relations: ["director"],
+      order: {
+        id: "ASC",
+      },
     });
   }
 
