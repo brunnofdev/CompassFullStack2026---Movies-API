@@ -1,0 +1,397 @@
+{
+  "info": {
+    "_postman_id": "69b2b45f-258b-4caf-a36d-add9af421b89",
+    "name": "Compass - Desafio 1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49807254",
+    "_collection_link": "https://go.postman.co/collection/49807254-69b2b45f-258b-4caf-a36d-add9af421b89?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "director",
+      "item": [
+        {
+          "name": "Get all",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/directors",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "directors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get (id)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/directors/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "directors",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get (id/movies)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/directors/1/movies",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "directors",
+                "1",
+                "movies"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Post 1",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"João\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/directors",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "directors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Post 2",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Brunno\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/directors",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "directors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Put",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Arthur\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/directors/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "directors",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/directors/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "directors",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "movie",
+      "item": [
+        {
+          "name": "Get all",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/movies",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "movies"
+              ],
+              "query": [
+                {
+                  "key": "title",
+                  "value": "stellar",
+                  "disabled": true
+                },
+                {
+                  "key": "releaseYear",
+                  "value": "2014",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "genre",
+                  "value": "sci-fi",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get (id)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/movies/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "movies",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Post 1",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Interstellar\",\r\n  \"description\": \"Um grupo de astronautas viaja através de um buraco de minhoca em busca de um novo lar para a humanidade.\",\r\n  \"releaseYear\": 2014,\r\n  \"genre\": \"Sci-Fi\",\r\n  \"directorId\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/movies",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "movies"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Post 2",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Inception\",\r\n  \"description\": \"Um ladrão que rouba segredos corporativos através do uso de tecnologia de compartilhamento de sonhos.\",\r\n  \"releaseYear\": 2010,\r\n  \"genre\": \"Sci-Fi\",\r\n  \"directorId\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/movies",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "movies"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Post",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"The Matrix\",\r\n  \"description\": \"Um hacker descobre a verdadeira natureza da sua realidade e o seu papel na guerra contra os controladores.\",\r\n  \"releaseYear\": 1999,\r\n  \"genre\": \"Action\",\r\n  \"directorId\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/movies/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "movies",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Inception\",\r\n  \"description\": \"Um ladrão que rouba segredos corporativos através do uso de tecnologia de compartilhamento de sonhos.\",\r\n  \"releaseYear\": 2010,\r\n  \"genre\": \"Sci-Fi\",\r\n  \"directorId\": 3\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/movies/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "movies",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
