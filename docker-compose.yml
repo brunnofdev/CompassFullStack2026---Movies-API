@@ -5,13 +5,44 @@ services:
     image: postgres:15-alpine
     container_name: movie-collection-db
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: adminpassword
-      POSTGRES_DB: movie_db
+      # Lê os valores do seu .env local
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
+      # Mapeia a porta 5433 da sua máquina para a 5432 do container
       - "5433:5432"
+    healthcheck:
+      # O Docker fica "pingando" o banco até ele estar 100% pronto
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
+      # Salva os dados para não perder se o container desligar
       - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: movie-api
+    ports:
+      # Mapeia a porta do Express
+      - "${PORT}:${PORT}"
+    environment:
+      # SOBRESCREVE o 'localhost' do seu .env para forçar a API a achar o banco no Docker
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - PORT=${PORT}
+      - NODE_ENV=production
+    depends_on:
+      postgres:
+        # A API só inicia depois que o healthcheck do banco der 'OK'
+        condition: service_healthy
+    # Executa a migration em JavaScript e depois inicia o servidor
+    command: sh -c "npm run migration:run:prod && npm start"
 
 volumes:
   pgdata:
