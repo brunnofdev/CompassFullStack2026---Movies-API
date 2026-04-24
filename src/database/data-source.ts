@@ -10,7 +10,7 @@ export const AppDataSource = new DataSource({
   database: "movie_db",
   synchronize: false,
   logging: false,
-  entities: ["src/models/*.ts"],
-  migrations: ["src/database/migrations/*.ts"],
+  entities: [`${__dirname}/../models/*.{ts,js}`],
+  migrations: [`${__dirname}/migrations/*.{ts,js}`],
   subscribers: [],
 });
