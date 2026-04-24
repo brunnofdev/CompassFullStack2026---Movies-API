@@ -74,6 +74,20 @@ I have included a **Postman Collection** in the root directory to simplify the e
 
 ---
 
+### Avaliable Scripts
+
+| Script                     | Description                                       |
+| :------------------------- | :------------------------------------------------ |
+| npm run dev                | Starts the API in development mode                |
+| npm run build              | Compiles TypeScript into JavaScript (dist/)       |
+| npm run start              | Runs the compiled production build.               |
+| npm run test               | Runs unit tests with Jest                         |
+| npm run migration:gen      | Generates a new migration based on entity changes |
+| npm run migration:run      | Executes pending database migrations              |
+| npm run migration:rollback | Reverts the last executed migration               |
+
+---
+
 ## 📡 API Endpoints
 
 ### Movies
@@ -184,6 +198,20 @@ Incluí uma **coleção do Postman** no diretório raiz para simplificar o proce
 3.Arraste e solte o arquivo no Postman.
 
 4.Todas as requisições (POST, GET, PUT, DELETE) estão pré-configuradas e prontas para testar.
+
+---
+
+### Scripts Disponíveis
+
+| Script                     | Descrição                                                 |
+| :------------------------- | :-------------------------------------------------------- |
+| npm run dev                | Inicia o API em modo de desenvolvimento                   |
+| npm run build              | Compila os arquivos TypeScript para JavaScript (dist/)    |
+| npm run start              | Executa a versão compilada de produção                    |
+| npm run test               | Executa os testes unitários utilizando Jest               |
+| npm run migration:gen      | Gera uma nova migration baseada em mudanças nas entidades |
+| npm run migration:run      | Executa as migrations pendentes no banco de dado          |
+| npm run migration:rollback | Reverte a última migration executada                      |
 
 ---
 
